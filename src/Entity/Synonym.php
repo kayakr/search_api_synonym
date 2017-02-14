@@ -30,7 +30,7 @@ use Drupal\user\UserInterface;
  *   base_table = "search_api_synonym",
  *   data_table = "search_api_synonym_field_data",
  *   admin_permission = "administer search api synonyms",
- *   translatable = TRUE,
+ *   translatable = FALSE,
  *   entity_keys = {
  *     "id" = "sid",
  *     "label" = "word",
