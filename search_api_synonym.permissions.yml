@@ -1,0 +1,3 @@
+administer search api synonyms:
+  title: 'Administer Search API synonyms'
+  description: 'Allow to access the administration of search API synonyms entities.'

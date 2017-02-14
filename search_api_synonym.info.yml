@@ -1,0 +1,7 @@
+name: Search API Synonym
+type: module
+description: Managing of search synonyms in Drupal.
+core: 8.x
+package: Search
+dependencies:
+  - system (>=8.2.0)

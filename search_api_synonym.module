@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * @file
+ * Contains search_api_synonym.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Denotes that the synonym is not active.
+ */
+const SYNONYM_NOT_ACTIVE = 0;
+
+/**
+ * Denotes that the synonym is active.
+ */
+const SYNONYM_ACTIVE = 1;
+
+/**
+ * Implements hook_help().
+ */
+function search_api_synonym_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the search_api_synonym module.
+    case 'help.page.search_api_synonym':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Managing of search synonyms in Drupal.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
