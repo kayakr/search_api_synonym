@@ -15,7 +15,7 @@ class SynonymViewsData extends EntityViewsData {
     $data = parent::getViewsData();
 
 
-    $data['search_api_synonym_field_data']['table']['base']['help'] = $this->t('Search synonyms.');
+    $data['search_api_synonym_field_data']['table']['base']['help'] = $this->t('Synonyms managed by Search API Synonyms module.');
     $data['search_api_synonym_field_data']['table']['base']['defaults']['field'] = 'word';
     $data['search_api_synonym_field_data']['table']['wizard_id'] = 'synonym';
 
@@ -155,8 +155,6 @@ class SynonymViewsData extends EntityViewsData {
     $data['search_api_synonym_field_data']['uid']['relationship']['title'] = $this->t('Author');
     $data['search_api_synonym_field_data']['uid']['relationship']['help'] = $this->t("The User ID of the synonym's author.");
     $data['search_api_synonym_field_data']['uid']['relationship']['label'] = $this->t('author');
-
-
 
     return $data;
   }
