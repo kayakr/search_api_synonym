@@ -1,0 +1,14 @@
+description: 'Export search synonyms to a specific format.'
+options:
+  plugin:
+    description: 'Machine name of the export plugin. E.g. solr.'
+  langcode:
+    description: 'Language being exported. Use the language code. E.g. en or da.'
+  type:
+    description: 'Synonym type. Allowed values: synonym = Synomyms, spelling_error = Spelling errors, all = All types (synonyms and spelling errors). If option not defined will all types be exported.'
+  filter:
+    description: 'Export filter. Allowed values: nospace = Skip all words containing a space, onlyspace = Skip all words without a space.'
+arguments: {}
+messages:
+  start: 'Starting vacancy import....'
+  success: 'vacancies imported/updated from'

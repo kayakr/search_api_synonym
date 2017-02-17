@@ -1,0 +1,9 @@
+services:
+  plugin.manager.search_api_synonym.export:
+    class: Drupal\search_api_synonym\Export\ExportPluginManager
+    parent: default_plugin_manager
+  search_api_synonym.command.export:
+    class: Drupal\search_api_synonym\Command\ExportCommand
+    arguments: []
+    tags:
+      - { name: drupal.command }
