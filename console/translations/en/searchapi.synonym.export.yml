@@ -7,8 +7,17 @@ options:
   type:
     description: 'Synonym type. Allowed values: synonym = Synomyms, spelling_error = Spelling errors, all = All types (synonyms and spelling errors). If option not defined will all types be exported.'
   filter:
-    description: 'Export filter. Allowed values: nospace = Skip all words containing a space, onlyspace = Skip all words without a space.'
+    description: 'Export filter. Allowed values: nospace = Skip all words containing a space, withspace = Skip all words without a space.'
+  incremental:
+    description: 'Incremental export - use Unix timestamp. Only export synonyms changed after the provided timestamp.'
+  file:
+    description: 'File name used when saving the exported file. Include extension and not folder name!'
 arguments: {}
 messages:
-  start: 'Starting vacancy import....'
-  success: 'vacancies imported/updated from'
+  start: 'Starting synonym export....'
+  success: 'Synonyms export and saved in the following file:'
+  invalidplugin: '--plugin is not valid. Please, use an existing plugin machine name.'
+  invalidlangcode: '--langcode is not valid. Please, use an existing language code.'
+  invalidtype: '--type option is not valid. The only allowed values are "synonym", "spelling_error", "all".'
+  invalidfilter: '--filter option is not valid. The only allowed values are "nospace", "withspace", "all".'
+

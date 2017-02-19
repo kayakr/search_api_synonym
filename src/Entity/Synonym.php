@@ -185,14 +185,12 @@ class Synonym extends ContentEntityBase implements SynonymInterface {
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Authored by'))
       ->setDescription(t('The user ID of author of the Synonym entity.'))
-      ->setRevisionable(TRUE)
       ->setSettings(array(
         'target_type' => 'user',
         'handler' => 'default',
         'required' => TRUE,
       ))
       ->setDefaultValueCallback('Drupal\node\Entity\Node::getCurrentUserId')
-      ->setTranslatable(TRUE)
       ->setDisplayOptions('view', array(
         'label' => 'hidden',
         'type' => 'author',
@@ -220,7 +218,6 @@ class Synonym extends ContentEntityBase implements SynonymInterface {
       ))
       ->setRequired(TRUE)
       ->setDefaultValue('')
-      ->setTranslatable(TRUE)
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'string',
@@ -242,7 +239,6 @@ class Synonym extends ContentEntityBase implements SynonymInterface {
       ))
       ->setRequired(TRUE)
       ->setDefaultValue('')
-      ->setTranslatable(TRUE)
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'string',
@@ -259,12 +255,11 @@ class Synonym extends ContentEntityBase implements SynonymInterface {
       ->setLabel(t('Synonyms'))
       ->setDescription(t('The synonyms to the word. Separate multiple by comma.'))
       ->setSettings(array(
-        'max_length' => 255,
+        'max_length' => 1024,
         'text_processing' => 0,
       ))
       ->setRequired(TRUE)
       ->setDefaultValue('')
-      ->setTranslatable(TRUE)
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'string',

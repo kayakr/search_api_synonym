@@ -11,7 +11,7 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @Annotation
  */
-class Export extends Plugin {
+class SearchApiSynonymExport extends Plugin {
 
   /**
    * The plugin id.
