@@ -138,10 +138,16 @@ class ExportPluginManager extends DefaultPluginManager {
     // Get synonyms data matching the options.
     $synonyms = $this->getSynonymsData();
 
-    // Get data in the plugin instance format
-    $data = $instance->getFormattedSynonyms($synonyms);
+    // We only export if full export or if their is new synonyms.
+    if (!($this->getExportOption('incremental') && empty($synonyms))) {
+      // Get data in the plugin instance format
+      $data = $instance->getFormattedSynonyms($synonyms);
 
-    return $this->saveSynonymsFile($data);
+      return $this->saveSynonymsFile($data);
+    }
+    else {
+      return FALSE;
+    }
   }
 
   /**
