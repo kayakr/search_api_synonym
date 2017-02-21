@@ -72,7 +72,7 @@ function search_api_synonym_cron() {
       $options['langcode'] = $language->getId();
 
       // Export synonyms with and without spaces into separate files
-      if ($conf['separate_files'] && $conf['type'] == 'none') {
+      if ($conf['separate_files'] && ($conf['filter'] == 'none' || !$conf['filter'])) {
         // Without spaces
         $options['filter'] = 'nospace';
         search_api_synonym_execute_single_import($plugin, $options);
