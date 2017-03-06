@@ -71,7 +71,7 @@ class SynonymSettingsForm extends ConfigFormBase {
     // Add cron settings
     $cron = $config->get('cron');
     $form['cron'] = [
-      '#title' => t('Cron settings'),
+      '#title' => $this->t('Cron settings'),
       '#type' => 'details',
       '#open' => TRUE,
       '#tree' => TRUE,
@@ -85,7 +85,7 @@ class SynonymSettingsForm extends ConfigFormBase {
     $form['cron']['plugin'] = [
       '#type' => 'select',
       '#title' => $this->t('Synonym export plugin'),
-      '#description' => t('Select the export plugin being used by cron.'),
+      '#description' => $this->t('Select the export plugin being used by cron.'),
       '#default_value' => $cron['plugin'] ? $cron['plugin'] : '',
       '#options' => $options,
     ];
@@ -93,16 +93,16 @@ class SynonymSettingsForm extends ConfigFormBase {
     $options = [900, 1800, 3600, 10800, 21600, 43200, 86400, 604800];
     $form['cron']['interval'] = [
       '#type' => 'select',
-      '#title' => t('Export synonyms every'),
-      '#description' => t('How often should Drupal export synonyms?'),
+      '#title' => $this->t('Export synonyms every'),
+      '#description' => $this->t('How often should Drupal export synonyms?'),
       '#default_value' => $cron['interval'] ? $cron['interval'] : 86400,
       '#options' => array_map([\Drupal::service('date.formatter'), 'formatInterval'], array_combine($options, $options)),
     ];
 
     $form['cron']['type'] = [
       '#type' => 'radios',
-      '#title' => t('Type'),
-      '#description' => t('Which synonym type should be exported by cron?'),
+      '#title' => $this->t('Type'),
+      '#description' => $this->t('Which synonym type should be exported by cron?'),
       '#default_value' => $cron['type'] ? $cron['type'] : 'all',
       '#options' => [
         'all' => $this->t('All'),
@@ -113,8 +113,8 @@ class SynonymSettingsForm extends ConfigFormBase {
 
     $form['cron']['filter'] = [
       '#type' => 'radios',
-      '#title' => t('Filter'),
-      '#description' => t('Which filters should be used when selecting synonyms.'),
+      '#title' => $this->t('Filter'),
+      '#description' => $this->t('Which filters should be used when selecting synonyms.'),
       '#default_value' => $cron['filter'] ? $cron['filter'] : 'none',
       '#options' => [
         'none' => $this->t('No filter'),
@@ -125,8 +125,8 @@ class SynonymSettingsForm extends ConfigFormBase {
 
     $form['cron']['separate_files'] = [
       '#type' => 'checkbox',
-      '#title' => t('Separate files'),
-      '#description' => t('Export synonyms with and without spaces into separate files.'),
+      '#title' => $this->t('Separate files'),
+      '#description' => $this->t('Export synonyms with and without spaces into separate files.'),
       '#default_value' => $cron['separate_files'] ? $cron['separate_files'] : '',
       '#states' => [
         'visible' => [
@@ -137,8 +137,8 @@ class SynonymSettingsForm extends ConfigFormBase {
 
     $form['cron']['export_if_changed'] = [
       '#type' => 'checkbox',
-      '#title' => t('Only export if changes'),
-      '#description' => t('Only export synonyms if their is either new or changed synonyms since last export.'),
+      '#title' => $this->t('Only export if changes'),
+      '#description' => $this->t('Only export synonyms if their is either new or changed synonyms since last export.'),
       '#default_value' => $cron['export_if_changed'] ? $cron['export_if_changed'] : TRUE,
     ];
 
