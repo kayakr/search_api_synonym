@@ -153,7 +153,7 @@ class SynonymViewsData extends EntityViewsData {
     $data['search_api_synonym_field_data']['uid']['title'] = $this->t('Author uid');
     $data['search_api_synonym_field_data']['uid']['help'] = $this->t('If you need more fields than the uid add the synonym: author relationship');
     $data['search_api_synonym_field_data']['uid']['relationship']['title'] = $this->t('Author');
-    $data['search_api_synonym_field_data']['uid']['relationship']['help'] = $this->t("The User ID of the synonym's author.");
+    $data['search_api_synonym_field_data']['uid']['relationship']['help'] = $this->t('The User ID of the synonym\'s author.');
     $data['search_api_synonym_field_data']['uid']['relationship']['label'] = $this->t('author');
 
     return $data;
