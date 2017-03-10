@@ -139,7 +139,7 @@ class SynonymSettingsForm extends ConfigFormBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Only export if changes'),
       '#description' => $this->t('Only export synonyms if their is either new or changed synonyms since last export.'),
-      '#default_value' => $cron['export_if_changed'] ? $cron['export_if_changed'] : TRUE,
+      '#default_value' => $cron['export_if_changed'] ? $cron['export_if_changed'] : FALSE,
     ];
 
     return parent::buildForm($form, $form_state);
