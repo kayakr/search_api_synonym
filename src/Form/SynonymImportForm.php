@@ -4,8 +4,9 @@ namespace Drupal\search_api_synonym\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\search_api_synonym\Import\Importer;
 use Drupal\search_api_synonym\Import\ImportPluginManager;
-use Drupal\search_api_synonym\Import\ImportData;
+use Drupal\search_api_synonym\Import\Import;
 use Drupal\search_api_synonym\ImportException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -197,21 +198,23 @@ class SynonymImportForm extends FormBase {
       $plugin_id = $values['plugin'];
       $instance = $this->getPluginInstance($plugin_id);
 
-      #$filename = file_unmanaged_copy($values['file_upload']->getFileUri());
-
       // Parse file.
       $data = $instance->parseFile($values['file_upload'], $values['plugin_settings'][$plugin_id]);
 
       // Import data.
-      $importer = \Drupal::service('search_api_synonym.importer');
-      $result = $importer->execute($data, $values);
+      $importer = new Importer();
+      $results = $importer->execute($data, $values);
 
       // Set message before returning to form.
-      drupal_set_message($this->t('@count synonyms was successfully imported.', array('@count' => count($result['success']))));
-      drupal_set_message($this->t('@count synonyms failed import.', array('@count' => count($result['errors']))));
+      if (!empty($results['success'])) {
+        drupal_set_message($this->t('@count synonyms was successfully imported.', array('@count' => count($results['success']))));
+      }
+      if (!empty($results['errors'])) {
+        drupal_set_message($this->t('@count synonyms failed import.', array('@count' => count($results['errors']))));
+      }
     }
     catch (ImportException $e) {
-      $this->logger('DevelGenerate', $this->t('Failed to import file due to "%error".', array('%error' => $e->getMessage())));
+      $this->logger('Search API Synonym', $this->t('Failed to import file due to "%error".', array('%error' => $e->getMessage())));
       drupal_set_message($this->t('Failed to import file due to "%error".', array('%error' => $e->getMessage())));
     }
   }
@@ -226,8 +229,7 @@ class SynonymImportForm extends FormBase {
    *   An import plugin instance.
    */
   public function getPluginInstance($plugin_id) {
-    $instance = $this->pluginManager->createInstance($plugin_id, array());
-    return $instance;
+    return $this->pluginManager->createInstance($plugin_id, array());
   }
 
 }

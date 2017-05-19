@@ -10,6 +10,3 @@ services:
     arguments: []
     tags:
       - { name: drupal.command }
-  search_api_synonym.importer:
-    class: Drupal\search_api_synonym\Import\Importer
-    arguments: ['@entity_type.manager', '@entity.repository', '@module_handler', '@database']
