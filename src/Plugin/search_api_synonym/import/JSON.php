@@ -5,6 +5,7 @@ namespace Drupal\search_api_synonym\Plugin\search_api_synonym\import;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\Component\Serialization\Json AS SerializationJSON;
 use Drupal\file\Entity\File;
 use Drupal\search_api_synonym\Import\ImportPluginBase;
 use Drupal\search_api_synonym\Import\ImportPluginInterface;
@@ -24,7 +25,21 @@ class JSON extends ImportPluginBase implements ImportPluginInterface {
    * {@inheritdoc}
    */
   public function parseFile(File $file, array $settings) {
-    return [];
+    $data = [];
+    $json = file_get_contents($file->getFileUri());
+
+    if ($items = SerializationJSON::decode($json)) {
+      foreach ($items as $item) {
+        if (!empty($item['word']) && !empty($item['synonym'])) {
+          $data[] = [
+            'word' => $item['word'],
+            'synonym' => $item['synonym']
+          ];
+        }
+      }
+    }
+
+    return $data;
   }
 
   /**
