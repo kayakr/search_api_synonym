@@ -1,4 +1,7 @@
 services:
+  plugin.manager.search_api_synonym.import:
+    class: Drupal\search_api_synonym\Import\ImportPluginManager
+    parent: default_plugin_manager
   plugin.manager.search_api_synonym.export:
     class: Drupal\search_api_synonym\Export\ExportPluginManager
     parent: default_plugin_manager
@@ -7,3 +10,6 @@ services:
     arguments: []
     tags:
       - { name: drupal.command }
+  search_api_synonym.importer:
+    class: Drupal\search_api_synonym\Import\Importer
+    arguments: ['@entity_type.manager', '@entity.repository', '@module_handler', '@database']
