@@ -39,13 +39,30 @@ at admin/config/search/search-api-synonyms.
 EXPORT SYNONYMS
 ---------------
 
+Drupal Console
+--------------
+
 Export the added synonyms using the Drupal Console command:
 
-- searchapi:synonym:export
+- drupal searchapi:synonym:export
 
 Execute the command with --help to see the different options.
 
-Drush command and automated export via Cron in development.
+Drush
+-----
+
+Export synonyms using the Drush command:
+
+- drush search-api-synonym-export
+
+- drush sapi-syn-ex
+
+Execute the command with --help to see the different options.
+
+Cron
+----
+
+Export using Drupal cron is supported. See the settings in /admin/config/search/search-api-synonyms/settings.
 
 DEVELOPERS
 ----------
