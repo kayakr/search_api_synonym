@@ -29,6 +29,8 @@ class SynonymSettingsForm extends ConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
+   * @param \Drupal\search_api_synonym\Export\ExportPluginManager $manager
+   *   The synonyms export plugin manager.
    */
   public function __construct(ConfigFactoryInterface $config_factory, ExportPluginManager $manager) {
     parent::__construct($config_factory);

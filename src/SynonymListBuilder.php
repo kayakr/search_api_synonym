@@ -57,27 +57,27 @@ class SynonymListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header = array(
+    $header = [
       'word' => $this->t('Word'),
       'synonyms' => $this->t('Synonyms'),
-      'author' => array(
+      'author' => [
         'data' => $this->t('Author'),
-        'class' => array(RESPONSIVE_PRIORITY_LOW),
-      ),
-      'status' => array(
+        'class' => [RESPONSIVE_PRIORITY_LOW],
+      ],
+      'status' => [
         'data' => $this->t('Status'),
-        'class' => array(RESPONSIVE_PRIORITY_LOW),
-      ),
-      'changed' => array(
+        'class' => [RESPONSIVE_PRIORITY_LOW],
+      ],
+      'changed' => [
         'data' => $this->t('Updated'),
-        'class' => array(RESPONSIVE_PRIORITY_LOW),
-      ),
-    );
+        'class' => [RESPONSIVE_PRIORITY_LOW],
+      ],
+    ];
     if (\Drupal::languageManager()->isMultilingual()) {
-      $header['language_name'] = array(
+      $header['language_name'] = [
         'data' => $this->t('Language'),
-        'class' => array(RESPONSIVE_PRIORITY_LOW),
-      );
+        'class' => [RESPONSIVE_PRIORITY_LOW],
+      ];
     }
 
     return $header + parent::buildHeader();
@@ -92,10 +92,10 @@ class SynonymListBuilder extends EntityListBuilder {
     /* @var $entity \Drupal\search_api_synonym\Entity\Synonym */
     $row['word'] = $this->buildEditLink($entity->label(), $entity);
     $row['synonyms'] = $this->buildEditLink($entity->getSynonyms(), $entity);
-    $row['author']['data'] = array(
+    $row['author']['data'] = [
       '#theme' => 'username',
       '#account' => $entity->getOwner(),
-    );
+    ];
     $row['status'] = $entity->isActive() ? $this->t('active') : $this->t('inactive');
     $row['changed'] = $this->dateFormatter->format($entity->getChangedTime(), 'short');
     $language_manager = \Drupal::languageManager();
@@ -122,9 +122,9 @@ class SynonymListBuilder extends EntityListBuilder {
     return new Link(
       $label,
       new Url(
-        'entity.search_api_synonym.edit_form', array(
+        'entity.search_api_synonym.edit_form', [
           'search_api_synonym' => $entity->id(),
-        )
+        ]
       )
     );
   }

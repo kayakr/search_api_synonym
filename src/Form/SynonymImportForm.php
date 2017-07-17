@@ -84,6 +84,7 @@ class SynonymImportForm extends FormBase {
         'merge' => $this->t('Merge'),
         'overwrite' => $this->t('Overwrite')
       ],
+      '#default_value' => 'merge',
       '#required' => TRUE,
     ];
 
@@ -96,6 +97,7 @@ class SynonymImportForm extends FormBase {
         'synonym' => 'Synonym',
         'spelling_error' => 'Spelling error'
       ],
+      '#default_value' => 'synonym',
       '#required' => TRUE,
     ];
 
@@ -122,7 +124,7 @@ class SynonymImportForm extends FormBase {
       '#title' => $this->t('Import format'),
       '#description' => $this->t('Choose the import format to use.'),
       '#options' => [],
-      '#default_value' => (count($this->availablePlugins) == 1) ? key($this->availablePlugins) : '',
+      '#default_value' => key($this->availablePlugins),
       '#required' => TRUE,
     ];
 
@@ -162,14 +164,15 @@ class SynonymImportForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
-    $values = $form_state->getValues();
 
+    $values = $form_state->getValues();
     // Get plugin instance for active plugin.
     $instance_active = $this->getPluginInstance($values['plugin']);
 
     // Validate the uploaded file.
     $extensions = $instance_active->allowedExtensions();
     $validators = ['file_validate_extensions' => $extensions];
+
     $file = file_save_upload('file_upload', $validators, FALSE, 0, FILE_EXISTS_RENAME);
     if (isset($file)) {
       if ($file) {
@@ -207,15 +210,15 @@ class SynonymImportForm extends FormBase {
 
       // Set message before returning to form.
       if (!empty($results['success'])) {
-        drupal_set_message($this->t('@count synonyms was successfully imported.', array('@count' => count($results['success']))));
+        drupal_set_message($this->t('@count synonyms was successfully imported.', ['@count' => count($results['success'])]));
       }
       if (!empty($results['errors'])) {
-        drupal_set_message($this->t('@count synonyms failed import.', array('@count' => count($results['errors']))));
+        drupal_set_message($this->t('@count synonyms failed import.', ['@count' => count($results['errors'])]));
       }
     }
     catch (ImportException $e) {
-      $this->logger('Search API Synonym', $this->t('Failed to import file due to "%error".', array('%error' => $e->getMessage())));
-      drupal_set_message($this->t('Failed to import file due to "%error".', array('%error' => $e->getMessage())));
+      $this->logger('search_api_synonym')->error($this->t('Failed to import file due to "%error".', ['%error' => $e->getMessage()]));
+      drupal_set_message($this->t('Failed to import file due to "%error".', ['%error' => $e->getMessage()]));
     }
   }
 
@@ -229,7 +232,7 @@ class SynonymImportForm extends FormBase {
    *   An import plugin instance.
    */
   public function getPluginInstance($plugin_id) {
-    return $this->pluginManager->createInstance($plugin_id, array());
+    return $this->pluginManager->createInstance($plugin_id, []);
   }
 
 }

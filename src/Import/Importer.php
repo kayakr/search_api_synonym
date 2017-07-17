@@ -50,15 +50,6 @@ class Importer {
 
   /**
    * Constructs Importer.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_manager
-   *   The entity type manager service.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
-   *   The entity repository service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\Database\Connection $connection
-   *   The database connection which will be used to store / get the nid / source guid mapping.
    */
   public function __construct() {
     $this->entityManager = \Drupal::service('entity.manager');
@@ -91,8 +82,11 @@ class Importer {
   /**
    * Prepare and validate the data.
    *
-   * @param array $data
-   *  Raw synonyms data.
+   * @param array $items
+   *   Raw synonyms data.
+   *
+   * @return array
+   *   Array with prepared data.
    */
   private function prepare(array $items) {
     $prepared = [];
@@ -123,7 +117,7 @@ class Importer {
     // Import without batch.
     if (count($items) <= 50) {
       foreach ($items as $word => $synonyms) {
-        $this->createSynonym($word, $synonyms, $settings, $context);
+        Importer::createSynonym($word, $synonyms, $settings, $context);
       }
     }
     // Import with batch.
@@ -161,6 +155,8 @@ class Importer {
    *   Batch context - also used for storing results in non batch operations.
    */
   public static function createSynonym($word, array $synonyms, array $settings, array &$context) {
+    $request_time = \Drupal::time()->getRequestTime();
+
     // Check if we have an existing synonym entity we should update.
     $sid = Importer::lookUpSynonym($word, $settings);
 
@@ -185,14 +181,14 @@ class Importer {
       ]);
       $uid = \Drupal::currentUser()->id();
       $entity->setOwnerId($uid);
-      $entity->setCreatedTime(REQUEST_TIME);
+      $entity->setCreatedTime($request_time);
       $entity->setType($settings['synonym_type']);
       $entity->setWord($word);
       $synonyms_str = implode(',', $synonyms);
       $entity->setSynonyms($synonyms_str);
     }
 
-    $entity->setChangedTime(REQUEST_TIME);
+    $entity->setChangedTime($request_time);
     $entity->setActive($settings['status']);
 
     $entity->save();
@@ -224,10 +220,10 @@ class Importer {
     if ($success) {
       // Set message before returning to form.
       if (!empty($result['success'])) {
-        drupal_set_message(t('@count synonyms was successfully imported.', array('@count' => count($result['success']))));
+        drupal_set_message(t('@count synonyms was successfully imported.', ['@count' => count($result['success'])]));
       }
       if (!empty($result['errors'])) {
-        drupal_set_message(t('@count synonyms failed import.', array('@count' => count($result['errors']))));
+        drupal_set_message(t('@count synonyms failed import.', ['@count' => count($result['errors'])]));
       }
     }
   }
@@ -237,6 +233,8 @@ class Importer {
    *
    * @param string $word
    *   The source word we add the synonym for.
+   * @param array $settings
+   *   Array with settings.
    *
    * @return int
    *   Entity id for the found synonym.

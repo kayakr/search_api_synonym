@@ -54,9 +54,9 @@ class Synonym extends ContentEntityBase implements SynonymInterface {
    */
   public static function preCreate(EntityStorageInterface $storage_controller, array &$values) {
     parent::preCreate($storage_controller, $values);
-    $values += array(
+    $values += [
       'user_id' => \Drupal::currentUser()->id(),
-    );
+    ];
   }
 
   /**
@@ -185,90 +185,90 @@ class Synonym extends ContentEntityBase implements SynonymInterface {
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Authored by'))
       ->setDescription(t('The user ID of author of the Synonym entity.'))
-      ->setSettings(array(
+      ->setSettings([
         'target_type' => 'user',
         'handler' => 'default',
         'required' => TRUE,
-      ))
+      ])
       ->setDefaultValueCallback('Drupal\node\Entity\Node::getCurrentUserId')
-      ->setDisplayOptions('view', array(
+      ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'author',
         'weight' => 0,
-      ))
-      ->setDisplayOptions('form', array(
+      ])
+      ->setDisplayOptions('form', [
         'type' => 'entity_reference_autocomplete',
         'weight' => 5,
-        'settings' => array(
+        'settings' => [
           'match_operator' => 'CONTAINS',
           'size' => '60',
           'autocomplete_type' => 'tags',
           'placeholder' => '',
-        ),
-      ))
+        ],
+      ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['type'] = BaseFieldDefinition::create('list_string')
       ->setLabel(t('Type'))
       ->setDescription(t('The type of synonym.'))
-      ->setSettings(array(
+      ->setSettings([
         'max_length' => 50,
         'allowed_values' => array('synonym' => 'Synonym', 'spelling_error' => 'Spelling error'),
-      ))
+      ])
       ->setRequired(TRUE)
       ->setDefaultValue('')
-      ->setDisplayOptions('view', array(
+      ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'string',
         'weight' => -3,
-      ))
-      ->setDisplayOptions('form', array(
+      ])
+      ->setDisplayOptions('form', [
         'type' => 'options_buttons',
         'weight' => -3,
-      ))
+      ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['word'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Word'))
       ->setDescription(t('The word we are defining synonyms for.'))
-      ->setSettings(array(
+      ->setSettings([
         'max_length' => 50,
         'text_processing' => 0,
-      ))
+      ])
       ->setRequired(TRUE)
       ->setDefaultValue('')
-      ->setDisplayOptions('view', array(
+      ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'string',
         'weight' => -4,
-      ))
-      ->setDisplayOptions('form', array(
+      ])
+      ->setDisplayOptions('form', [
         'type' => 'string_textfield',
         'weight' => -4,
-      ))
+      ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['synonyms'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Synonyms'))
       ->setDescription(t('The synonyms to the word. Separate multiple by comma.'))
-      ->setSettings(array(
+      ->setSettings([
         'max_length' => 1024,
         'text_processing' => 0,
-      ))
+      ])
       ->setRequired(TRUE)
       ->setDefaultValue('')
-      ->setDisplayOptions('view', array(
+      ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'string',
         'weight' => -3,
-      ))
-      ->setDisplayOptions('form', array(
+      ])
+      ->setDisplayOptions('form', [
         'type' => 'string_textfield',
         'weight' => -3,
-      ))
+      ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
@@ -276,25 +276,25 @@ class Synonym extends ContentEntityBase implements SynonymInterface {
       ->setLabel(t('Activate synonym'))
       ->setDescription(t('Only active synonyms will be used.'))
       ->setDefaultValue(TRUE)
-      ->setDisplayOptions('view', array(
+      ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'boolean',
         'weight' => -2,
-      ))
-      ->setDisplayOptions('form', array(
+      ])
+      ->setDisplayOptions('form', [
         'type' => 'boolean_checkbox',
         'weight' => -2,
-      ))
+      ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Language'))
       ->setDescription(t('The language for the Synonym entity.'))
-      ->setDisplayOptions('form', array(
+      ->setDisplayOptions('form', [
         'type' => 'language_select',
         'weight' => 10,
-      ))
+      ])
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')

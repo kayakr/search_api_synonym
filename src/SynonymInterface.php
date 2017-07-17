@@ -45,7 +45,7 @@ interface SynonymInterface extends ContentEntityInterface, EntityChangedInterfac
   /**
    * Sets the Synonym word.
    *
-   * @param string $name
+   * @param string $word
    *   The Synonym word.
    *
    * @return \Drupal\search_api_synonym\SynonymInterface

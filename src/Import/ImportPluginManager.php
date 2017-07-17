@@ -66,7 +66,7 @@ class ImportPluginManager extends DefaultPluginManager {
     // Use plugin system to get list of available import plugins.
     $plugins = $this->getDefinitions();
 
-    $output = array();
+    $output = [];
     foreach ($plugins as $id => $definition) {
       $output[$id] = $definition;
     }

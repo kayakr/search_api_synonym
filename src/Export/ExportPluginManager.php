@@ -37,7 +37,7 @@ class ExportPluginManager extends DefaultPluginManager {
   }
 
   /**
-   * Set active plugin
+   * Set active plugin.
    *
    * @param string $plugin_id
    *   The active plugin.
@@ -47,7 +47,7 @@ class ExportPluginManager extends DefaultPluginManager {
   }
 
   /**
-   * Get active plugin
+   * Get active plugin.
    *
    * @return string
    *   The active plugin.
@@ -57,9 +57,9 @@ class ExportPluginManager extends DefaultPluginManager {
   }
 
   /**
-   * Set export options
+   * Set export options.
    *
-   * @param array $options
+   * @param array $export_options
    *   Array with export options
    */
   public function setExportOptions(array $export_options) {
@@ -67,7 +67,7 @@ class ExportPluginManager extends DefaultPluginManager {
   }
 
   /**
-   * Get export options
+   * Get export options.
    *
    * @return array
    *   Array with export options
@@ -77,7 +77,7 @@ class ExportPluginManager extends DefaultPluginManager {
   }
 
   /**
-   * Get single export option
+   * Get single export option.
    *
    * @param string $key
    *   Option key
@@ -99,7 +99,7 @@ class ExportPluginManager extends DefaultPluginManager {
     // Use plugin system to get list of available export plugins.
     $plugins = $this->getDefinitions();
 
-    $output = array();
+    $output = [];
     foreach ($plugins as $id => $definition) {
       $output[$id] = $definition;
     }
@@ -133,7 +133,7 @@ class ExportPluginManager extends DefaultPluginManager {
    */
   public function executeExport() {
     // Export plugin instance
-    $instance = $this->createInstance($this->getPluginId(), array());
+    $instance = $this->createInstance($this->getPluginId(), []);
 
     // Get synonyms data matching the options.
     $synonyms = $this->getSynonymsData();
@@ -220,6 +220,9 @@ class ExportPluginManager extends DefaultPluginManager {
 
   /**
    * Generate an export file name based on export options.
+   *
+   * @return string
+   *   The generated file name.
    */
   private function generateFileName() {
     $options = $this->getExportOptions();
