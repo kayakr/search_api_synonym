@@ -21,7 +21,7 @@ function search_api_synonym_drush_command() {
       'plugin' => dt('Machine name of the export plugin. E.g. solr.'),
       'langcode' => dt('Language being exported. Use the language code. E.g. en or da.'),
       'type' => dt('Synonym type. Allowed values: synonym = Synomyms, spelling_error = Spelling errors, all = All types (synonyms and spelling errors). Defaults to "alL".'),
-      'filter' => dt('Export filter. Allowed values: nospace = Skip all words containing a space, withspace = Skip all words without a space. Defaults to "all".'),
+      'filter' => dt('Export filter. Allowed values: nospace = Skip all words containing a space, onlyspace = Skip all words without a space. Defaults to "all".'),
       'incremental' => dt('Incremental export - use Unix timestamp. Only export synonyms changed after the provided timestamp.'),
       'file' => dt('File name used when saving the exported file. Include extension but not folder name!.'),
     ],
@@ -67,7 +67,7 @@ function drush_search_api_synonym_export() {
   // Validate option: filter
   if (!empty($filter) && !search_api_synonym_drush_validate_option_filter($filter)) {
     $error = TRUE;
-    drush_set_error(dt('--filter option is not valid. The only allowed values are "nospace", "withspace", "all".'));
+    drush_set_error(dt('--filter option is not valid. The only allowed values are "nospace", "onlyspace", "all".'));
   }
 
   // Prepare export
