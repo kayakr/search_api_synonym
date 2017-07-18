@@ -176,9 +176,13 @@ class ExportPluginManager extends DefaultPluginManager {
       switch ($filter) {
         case 'nospace':
           $query->condition('s.word', '% %', 'NOT LIKE');
+          $query->condition('s.synonyms', '% %', 'NOT LIKE');
           break;
         case 'onlyspace':
-          $query->condition('s.word', '% %', 'LIKE');
+          $group = $query->orConditionGroup()
+            ->condition('s.word', '% %', 'LIKE')
+            ->condition('s.synonyms', '% %', 'LIKE');
+          $query = $query->condition($group);
           break;
       }
     }
