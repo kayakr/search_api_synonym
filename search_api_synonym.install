@@ -1,0 +1,21 @@
+<?php
+
+use Drupal\Core\Database\Database;
+
+/**
+ * @file
+ * Contains search_api_synonym.install.
+ */
+
+/**
+ * Change length of the field 'word'.
+ */
+function search_api_synonym_update_8001() {
+  $spec = [
+    'type' => 'varchar',
+    'length' => 128,
+    'not null' => FALSE,
+  ];
+  $schema = Database::getConnection()->schema();
+  $schema->changeField('search_api_synonym', 'word', 'word', $spec);
+}

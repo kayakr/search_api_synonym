@@ -234,7 +234,7 @@ class Synonym extends ContentEntityBase implements SynonymInterface {
       ->setLabel(t('Word'))
       ->setDescription(t('The word we are defining synonyms for.'))
       ->setSettings([
-        'max_length' => 50,
+        'max_length' => 128,
         'text_processing' => 0,
       ])
       ->setRequired(TRUE)
