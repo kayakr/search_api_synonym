@@ -99,6 +99,15 @@ class Synonym extends ContentEntityBase implements SynonymInterface {
   /**
    * {@inheritdoc}
    */
+  public function getSynonymsFormatted() {
+    $synonyms = $this->get('synonyms')->value;
+    $synonyms = str_replace(',', ', ', $synonyms);
+    return trim($synonyms);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setSynonyms($synonyms) {
     $this->set('synonyms', $synonyms);
     return $this;

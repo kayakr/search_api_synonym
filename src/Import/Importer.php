@@ -117,6 +117,7 @@ class Importer {
     // Import without batch.
     if (count($items) <= 50) {
       foreach ($items as $word => $synonyms) {
+        $synonyms = explode(',', $synonyms[0]);
         Importer::createSynonym($word, $synonyms, $settings, $context);
       }
     }
@@ -159,6 +160,9 @@ class Importer {
 
     // Check if we have an existing synonym entity we should update.
     $sid = Importer::lookUpSynonym($word, $settings);
+
+    // Trim spaces from synonyms.
+    $synonyms = array_map('trim', $synonyms);
 
     // Load and update existing synonym entity.
     if ($sid) {
@@ -229,7 +233,7 @@ class Importer {
   }
 
   /**
-   * Look up synonym
+   * Look up synonym.
    *
    * @param string $word
    *   The source word we add the synonym for.

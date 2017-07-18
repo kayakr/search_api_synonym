@@ -62,6 +62,16 @@ interface SynonymInterface extends ContentEntityInterface, EntityChangedInterfac
   public function getSynonyms();
 
   /**
+   * Gets the synonyms formatted.
+   *
+   * Format the comma separated synonyms string with extra spaces.
+   *
+   * @return string
+   *   The synonyms to the word.
+   */
+  public function getSynonymsFormatted();
+
+  /**
    * Sets the synonyms to the word.
    *
    * @param string $synonyms
