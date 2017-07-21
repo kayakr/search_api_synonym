@@ -1,10 +1,17 @@
 [
   {
     "word": "cms",
-    "synonym": "content management system"
+    "synonym": "content management system",
+    "type": "synonym"
   },
   {
-    "word": "cms",
-    "synonym": "content management system"
+    "word": "dropal",
+    "synonym": "drupal",
+    "type": "spelling_error"
+  },
+  {
+    "word": "cq5,sitecore,sharepoint",
+    "synonym": "drupal",
+    "type": "spelling_error"
   }
 ]

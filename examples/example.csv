@@ -1,2 +1,4 @@
-"word";"synonym"
-"cms";"content management system"
+"word";"synonym";"type"
+"cms";"content management system";"synonym"
+"dropal";"drupal";"spelling_error"
+"cq5,sitecore,sharepoint";"drupal";"spelling_error"
