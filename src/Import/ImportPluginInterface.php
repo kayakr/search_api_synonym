@@ -25,7 +25,7 @@ interface ImportPluginInterface extends PluginFormInterface, ConfigurablePluginI
    * @return string
    *   The parsed file content.
    */
-  public function parseFile(File $file, array $settings);
+  public function parseFile(File $file, array $settings = []);
 
   /**
    * Plugin configuration form.

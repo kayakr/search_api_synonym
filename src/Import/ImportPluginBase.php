@@ -43,7 +43,7 @@ abstract class ImportPluginBase extends PluginBase implements ImportPluginInterf
   /**
    * {@inheritdoc}
    */
-  public function parseFile(File $file, array $settings) {
+  public function parseFile(File $file, array $settings = []) {
     return [];
   }
 

@@ -24,7 +24,7 @@ class JSON extends ImportPluginBase implements ImportPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function parseFile(File $file, array $settings) {
+  public function parseFile(File $file, array $settings = []) {
     $data = [];
     $json = file_get_contents($file->getFileUri());
 

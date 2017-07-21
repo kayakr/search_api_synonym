@@ -23,7 +23,7 @@ class CSV extends ImportPluginBase implements ImportPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function parseFile(File $file, array $settings) {
+  public function parseFile(File $file, array $settings = []) {
     $data = [];
     $delimiter = $settings['delimiter'];
     $enclosure = $settings['enclosure'];

@@ -216,7 +216,7 @@ class SynonymImportForm extends FormBase {
       $instance = $this->getPluginInstance($plugin_id);
 
       // Parse file.
-      $data = $instance->parseFile($values['file_upload'], $values['plugin_settings'][$plugin_id]);
+      $data = $instance->parseFile($values['file_upload'], (array) $values['plugin_settings'][$plugin_id]);
 
       // Import data.
       $importer = new Importer();
