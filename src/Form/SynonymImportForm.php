@@ -4,6 +4,7 @@ namespace Drupal\search_api_synonym\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\search_api_synonym\Import\Importer;
 use Drupal\search_api_synonym\Import\ImportPluginManager;
 use Drupal\search_api_synonym\Import\Import;
@@ -94,11 +95,24 @@ class SynonymImportForm extends FormBase {
       '#title' => $this->t('Type '),
       '#description' => $this->t('Which synonym type should the imported data be saved as?'),
       '#options' => [
-        'synonym' => 'Synonym',
-        'spelling_error' => 'Spelling error'
+        'synonym' => $this->t('Synonym'),
+        'spelling_error' => $this->t('Spelling error'),
+        'mixed' => $this->t('Mixed - Controlled by information in the source file')
       ],
       '#default_value' => 'synonym',
       '#required' => TRUE,
+    ];
+
+    $message = $this->t('Notice: the source file must contain information per synonym about the synonym type. All synonyms without type information will be skipped during import!');
+    $message = Markup::create('<div class="messages messages--warning">' . $message . '</div>');
+    $form['synonym_type_notice'] = [
+      '#type' => 'item',
+      '#markup' => $message,
+      '#states' => [
+        'visible' => [
+          ':radio[name="synonym_type"]' => ['value' => 'mixed'],
+        ],
+      ],
     ];
 
     // Activate.
@@ -208,12 +222,14 @@ class SynonymImportForm extends FormBase {
       $importer = new Importer();
       $results = $importer->execute($data, $values);
 
-      // Set message before returning to form.
-      if (!empty($results['success'])) {
-        drupal_set_message($this->t('@count synonyms was successfully imported.', ['@count' => count($results['success'])]));
-      }
       if (!empty($results['errors'])) {
-        drupal_set_message($this->t('@count synonyms failed import.', ['@count' => count($results['errors'])]));
+        $count = count($results['errors']);
+        $message = \Drupal::translation()->formatPlural($count,
+          '@count synonym failed import.',
+          '@count synonyms failed import.',
+          ['@count' => $count]
+        );
+        drupal_set_message($message);
       }
     }
     catch (ImportException $e) {

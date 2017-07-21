@@ -5,10 +5,11 @@ namespace Drupal\search_api_synonym\Import;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\search_api_synonym\Entity\Synonym;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\search_api_synonym\Entity\Synonym;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -71,7 +72,7 @@ class Importer {
    */
   public function execute(array $items, array $settings) {
     // Prepare items.
-    $items = $this->prepare($items);
+    $items = $this->prepare($items, $settings);
 
     // Create synonyms.
     $results = $this->createSynonyms($items, $settings);
@@ -84,15 +85,25 @@ class Importer {
    *
    * @param array $items
    *   Raw synonyms data.
+   * @param array $settings
+   *   Import settings.
    *
    * @return array
    *   Array with prepared data.
    */
-  private function prepare(array $items) {
+  private function prepare(array $items, array $settings) {
     $prepared = [];
 
     foreach ($items as $item) {
-      $prepared[$item['word']][] = $item['synonym'];
+      // Decide which synonym type to use.
+      if ($settings['synonym_type'] != 'mixed') {
+        $type = $settings['synonym_type'];
+      }
+      else {
+        $type = !empty($item['type']) ? $item['type'] : 'empty';
+      }
+
+      $prepared[$type][$item['word']][] = $item['synonym'];
     }
 
     return $prepared;
@@ -100,8 +111,6 @@ class Importer {
 
   /**
    * Create synonyms.
-   *
-   * Start batch if more than 50 synonyms should be added.
    *
    * @param array $items
    *   Raw synonyms data.
@@ -114,31 +123,34 @@ class Importer {
   public function createSynonyms(array $items, array $settings) {
     $context = [];
 
-    // Import without batch.
-    if (count($items) <= 50) {
-      foreach ($items as $word => $synonyms) {
-        $synonyms = explode(',', $synonyms[0]);
-        Importer::createSynonym($word, $synonyms, $settings, $context);
-      }
-    }
     // Import with batch.
-    else {
-      $operations = [];
+    $operations = [];
 
-      foreach ($items as $word => $synonyms) {
+    foreach ($items as $type => $item) {
+      // Continue with next item if type is not valid.
+      if ($type == 'empty') {
+        $context['results']['errors'][] = [
+          'word' => key($item),
+          'synonyms' => current($item)
+        ];
+        continue;
+      }
+
+      // Add each item to the batch.
+      foreach ($item as $word => $synonyms) {
         $operations[] = [
           '\Drupal\search_api_synonym\Import\Importer::createSynonym',
-          [$word, $synonyms, $settings]
+          [$word, $synonyms, $type, $settings]
         ];
       }
-
-      $batch = [
-        'title' => t('Import synonyms...'),
-        'operations' => $operations,
-        'finished' => '\Drupal\search_api_synonym\Import\Importer::createSynonymBatchFinishedCallback',
-      ];
-      batch_set($batch);
     }
+
+    $batch = [
+      'title' => t('Import synonyms...'),
+      'operations' => $operations,
+      'finished' => '\Drupal\search_api_synonym\Import\Importer::createSynonymBatchFinishedCallback',
+    ];
+    batch_set($batch);
 
     return isset($context['results']) ? $context['results'] : NULL;
   }
@@ -150,16 +162,18 @@ class Importer {
    *   The source word we add the synonym for.
    * @param array $synonyms
    *   Simple array with synonyms.
+   * @param string $type
+   *   The synonym type.
    * @param array $settings
    *   Import settings.
    * @param array $context
    *   Batch context - also used for storing results in non batch operations.
    */
-  public static function createSynonym($word, array $synonyms, array $settings, array &$context) {
+  public static function createSynonym($word, array $synonyms, $type, array $settings, array &$context) {
     $request_time = \Drupal::time()->getRequestTime();
 
     // Check if we have an existing synonym entity we should update.
-    $sid = Importer::lookUpSynonym($word, $settings);
+    $sid = Importer::lookUpSynonym($word, $type, $settings['langcode']);
 
     // Trim spaces from synonyms.
     $synonyms = array_map('trim', $synonyms);
@@ -186,7 +200,7 @@ class Importer {
       $uid = \Drupal::currentUser()->id();
       $entity->setOwnerId($uid);
       $entity->setCreatedTime($request_time);
-      $entity->setType($settings['synonym_type']);
+      $entity->setType($type);
       $entity->setWord($word);
       $synonyms_str = implode(',', $synonyms);
       $entity->setSynonyms($synonyms_str);
@@ -224,10 +238,13 @@ class Importer {
     if ($success) {
       // Set message before returning to form.
       if (!empty($result['success'])) {
-        drupal_set_message(t('@count synonyms was successfully imported.', ['@count' => count($result['success'])]));
-      }
-      if (!empty($result['errors'])) {
-        drupal_set_message(t('@count synonyms failed import.', ['@count' => count($result['errors'])]));
+        $count = count($result['success']);
+        $message = \Drupal::translation()->formatPlural($count,
+          '@count synonym was successfully imported.',
+          '@count synonyms was successfully imported.',
+          ['@count' => $count]
+        );
+        drupal_set_message($message);
       }
     }
   }
@@ -237,18 +254,20 @@ class Importer {
    *
    * @param string $word
    *   The source word we add the synonym for.
-   * @param array $settings
-   *   Array with settings.
+   * @param string $type
+   *   Synonym type.
+   * @param string $langcode
+   *   Language code.
    *
    * @return int
    *   Entity id for the found synonym.
    */
-  public static function lookUpSynonym($word, $settings) {
+  public static function lookUpSynonym($word, $type, $langcode) {
     $query = \Drupal::database()->select('search_api_synonym', 's');
     $query->fields('s', ['sid']);
-    $query->condition('s.type', $settings['synonym_type']);
+    $query->condition('s.type', $type);
     $query->condition('s.word', $word, 'LIKE');
-    $query->condition('s.langcode', $settings['langcode']);
+    $query->condition('s.langcode', $langcode);
     $query->range(0, 1);
     return (int) $query->execute()->fetchField(0);
   }
