@@ -39,7 +39,8 @@ class CSV extends ImportPluginBase implements ImportPluginInterface {
         if (!empty($row[0]) && !empty($row[1])) {
           $data[] = [
             'word' => $row[0],
-            'synonym' => $row['1']
+            'synonym' => $row['1'],
+            'type' => !empty($row['2']) ? $row['2'] : ''
           ];
         }
       }

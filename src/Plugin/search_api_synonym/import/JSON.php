@@ -33,7 +33,8 @@ class JSON extends ImportPluginBase implements ImportPluginInterface {
         if (!empty($item['word']) && !empty($item['synonym'])) {
           $data[] = [
             'word' => $item['word'],
-            'synonym' => $item['synonym']
+            'synonym' => $item['synonym'],
+            'type' => !empty($item['type']) ? $item['type'] : ''
           ];
         }
       }
