@@ -31,8 +31,9 @@ function search_api_synonym_update_8002() {
 
   foreach ($sids as $sid) {
     $synonym = Synonym::load($sid);
-    $synonyms = $synonym->getSynonyms();
+    $synonyms = explode(',', $synonym->getSynonyms());
     array_walk($synonyms, 'trim');
+    $synonyms = implode(',', $synonyms);
     $synonym->setSynonyms($synonyms);
     $synonym->save();
   }
