@@ -8,11 +8,17 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command;
 use Drupal\Console\Core\Command\Shared\ContainerAwareCommandTrait;
 use Drupal\Console\Core\Style\DrupalStyle;
+use Drupal\Console\Annotations\DrupalCommand;
 
 /**
  * Drupal Console Command for export synonyms.
  *
  * @package Drupal\search_api_synonym
+ *
+ * @DrupalCommand (
+ *     extension="search_api_synonym",
+ *     extensionType="module"
+ * )
  */
 class ExportCommand extends Command {
 
