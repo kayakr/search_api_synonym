@@ -6,7 +6,7 @@ services:
     class: Drupal\search_api_synonym\Export\ExportPluginManager
     parent: default_plugin_manager
   search_api_synonym.command.export:
-    class: Drupal\search_api_synonym\Command\ExportCommand
+    class: Drupal\search_api_synonym\Command\ExportDrupalCommand
     arguments: []
     tags:
       - { name: drupal.command }
