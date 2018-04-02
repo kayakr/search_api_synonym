@@ -48,8 +48,8 @@ Export the added synonyms using the Drupal Console command:
 
 Execute the command with --help to see the different options.
 
-Drush
------
+Drush 8 and previous versions
+-----------------------------
 
 Export synonyms using the Drush command:
 
@@ -57,7 +57,32 @@ Export synonyms using the Drush command:
 
 - drush sapi-syn-ex
 
-Execute the command with --help to see the different options.
+Drush 9
+-------
+
+Export synonyms using the Drush command:
+
+- drush search-api-synonym:export
+
+- drush sapi-syn:export
+
+- drush sapi-syn-ex
+
+Examples
+--------
+Replace [COMMAND] with one of the above Drupal Console / Drush commands.
+
+Export all Danish synonyms and spelling errors in the Solr format.
+
+- [COMMAND] --plugin=solr --langcode=da
+
+Export all Danish spelling errors in the Solr format.
+
+- [COMMAND] --plugin=solr --langcode=da --type=spelling_error
+
+Export all Danish synonyms without white spaces in the Solr format.
+
+- [COMMAND] --plugin=solr --langcode=da --type=synonym --filter=nospace
 
 Cron
 ----
