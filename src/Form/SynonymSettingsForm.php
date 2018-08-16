@@ -72,33 +72,44 @@ class SynonymSettingsForm extends ConfigFormBase {
 
     // Add cron settings
     $cron = $config->get('cron');
-    $form['cron'] = [
-      '#title' => $this->t('Cron settings'),
-      '#type' => 'details',
-      '#open' => TRUE,
-      '#tree' => TRUE,
-    ];
 
     $options = [];
     foreach ($this->availablePlugins as $id => $source) {
       $definition = $source->getPluginDefinition();
       $options[$id] = $definition['label'];
     }
+
+    $intervals = [0, 900, 1800, 3600, 10800, 21600, 43200, 86400, 604800];
+    $intervals = array_combine($intervals, $intervals);
+    $intervals = array_map([\Drupal::service('date.formatter'), 'formatInterval'], $intervals);
+    $intervals[0] = t('Never');
+
+    $form['interval'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Export synonyms every'),
+      '#description' => $this->t('How often should Drupal export synonyms?'),
+      '#default_value' => isset($cron['interval']) ? $cron['interval'] : 86400,
+      '#options' => $intervals,
+    ];
+
+    $form['cron'] = [
+      '#title' => $this->t('Cron settings'),
+      '#type' => 'details',
+      '#open' => TRUE,
+      '#tree' => TRUE,
+      '#states' => array(
+        'invisible' => array(
+          ':input[name="interval"]' => array('value' => 0),
+        ),
+      ),
+    ];
+
     $form['cron']['plugin'] = [
       '#type' => 'select',
       '#title' => $this->t('Synonym export plugin'),
       '#description' => $this->t('Select the export plugin being used by cron.'),
       '#default_value' => $cron['plugin'] ? $cron['plugin'] : '',
       '#options' => $options,
-    ];
-
-    $options = [900, 1800, 3600, 10800, 21600, 43200, 86400, 604800];
-    $form['cron']['interval'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Export synonyms every'),
-      '#description' => $this->t('How often should Drupal export synonyms?'),
-      '#default_value' => $cron['interval'] ? $cron['interval'] : 86400,
-      '#options' => array_map([\Drupal::service('date.formatter'), 'formatInterval'], array_combine($options, $options)),
     ];
 
     $form['cron']['type'] = [
@@ -158,8 +169,11 @@ class SynonymSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $values = $form_state->getValue('cron');
+    $values['interval'] = $form_state->getValue('interval');
+
     $this->config($this->getEditableConfigNames()[0])
-      ->set('cron', $form_state->getValue('cron'))
+      ->set('cron', $values)
       ->save();
 
     parent::submitForm($form, $form_state);

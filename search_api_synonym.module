@@ -42,10 +42,10 @@ function search_api_synonym_cron() {
 
   // Export synonyms to files.
   $conf = \Drupal::configFactory()->getEditable('search_api_synonym.settings')->get('cron');
-  $interval = !empty($conf['interval']) ? $conf['interval'] : 86400;
+  $interval = isset($conf['interval']) ? $conf['interval'] : 86400;
   $next_execution = \Drupal::state()->get('search_api_synonym.export.next_execution', 0);
 
-  if ($request_time >= $next_execution) {
+  if ($interval !== 0 && $request_time >= $next_execution) {
     $logger = \Drupal::logger('search_api_synonym');
     // Execute export
     $logger->notice('Executing export');
