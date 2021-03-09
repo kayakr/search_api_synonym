@@ -4,5 +4,4 @@ description: Managing of search synonyms in Drupal.
 core: 8.x
 package: Search
 configure: entity.search_api_synonym.collection
-dependencies:
-  - system (>=8.2.0)
+core_version_requirement: ^8 || ^9

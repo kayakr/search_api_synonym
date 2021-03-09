@@ -4,6 +4,7 @@ services:
     parent: default_plugin_manager
   plugin.manager.search_api_synonym.export:
     class: Drupal\search_api_synonym\Export\ExportPluginManager
+    arguments: ['@file_system']
     parent: default_plugin_manager
   search_api_synonym.command.export:
     class: Drupal\search_api_synonym\Command\ExportDrupalCommand

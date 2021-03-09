@@ -4,6 +4,7 @@ namespace Drupal\search_api_synonym\Export;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
@@ -28,12 +29,20 @@ class ExportPluginManager extends DefaultPluginManager {
   protected $exportOptions;
 
   /**
+   * The file system service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, FileSystemInterface $file_system = NULL) {
     parent::__construct('Plugin/search_api_synonym/export', $namespaces, $module_handler, 'Drupal\search_api_synonym\Export\ExportPluginInterface', 'Drupal\search_api_synonym\Annotation\SearchApiSynonymExport');
     $this->alterInfo('search_api_synonym_export_info');
     $this->setCacheBackend($cache_backend, 'search_api_synonym_export_info_plugins');
+    $this->fileSystem = $file_system;
   }
 
   /**
@@ -215,11 +224,11 @@ class ExportPluginManager extends DefaultPluginManager {
 
     // Create folder if it does not exist.
     $folder = 'public://synonyms';
-    file_prepare_directory($folder, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    $this->fileSystem->prepareDirectory($folder, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
 
     // Save file and return result.
     $path = $folder . '/'. $filename;
-    return file_unmanaged_save_data($data, $path, FILE_EXISTS_REPLACE);
+    return $this->fileSystem->saveData($data, $path, FileSystemInterface::EXISTS_REPLACE);
   }
 
   /**
