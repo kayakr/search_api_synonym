@@ -199,7 +199,7 @@ class Synonym extends ContentEntityBase implements SynonymInterface {
         'handler' => 'default',
         'required' => TRUE,
       ])
-      ->setDefaultValueCallback('Drupal\node\Entity\Node::getCurrentUserId')
+      ->setDefaultValueCallback('Drupal\node\Entity\Node::getDefaultEntityOwner')
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'author',
