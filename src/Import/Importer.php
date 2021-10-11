@@ -10,6 +10,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\search_api_synonym\Entity\Synonym;
+use Drupal\Core\Messenger\MessengerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -53,8 +54,8 @@ class Importer {
    * Constructs Importer.
    */
   public function __construct() {
-    $this->entityManager = \Drupal::service('entity.manager');
-    $this->entityRepository = \Drupal::service('entity.repository');
+    $this->entityManager = \Drupal::service('entity_type.manager');
+    $this->entityRepository = \Drupal::service('entity_type.repository');
     $this->moduleHandler = \Drupal::service('module_handler');
     $this->connection = \Drupal::service('database');
   }
@@ -244,7 +245,7 @@ class Importer {
           '@count synonyms was successfully imported.',
           ['@count' => $count]
         );
-        drupal_set_message($message);
+        \Drupal::service('messenger')->addMessage($message);
       }
     }
   }

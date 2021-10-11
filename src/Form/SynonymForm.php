@@ -42,13 +42,13 @@ class SynonymForm extends ContentEntityForm {
 
     switch ($status) {
       case SAVED_NEW:
-        drupal_set_message($this->t('Created the %label Synonym.', [
+        $this->messenger()->addMessage($this->t('Created the %label Synonym.', [
           '%label' => $entity->label(),
         ]));
         break;
 
       default:
-        drupal_set_message($this->t('Saved the %label Synonym.', [
+        $this->messenger()->addMessage($this->t('Saved the %label Synonym.', [
           '%label' => $entity->label(),
         ]));
     }

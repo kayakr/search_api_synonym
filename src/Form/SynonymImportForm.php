@@ -2,6 +2,7 @@
 
 namespace Drupal\search_api_synonym\Form;
 
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Markup;
@@ -187,7 +188,7 @@ class SynonymImportForm extends FormBase {
     $extensions = $instance_active->allowedExtensions();
     $validators = ['file_validate_extensions' => $extensions];
 
-    $file = file_save_upload('file_upload', $validators, FALSE, 0, FILE_EXISTS_RENAME);
+    $file = file_save_upload('file_upload', $validators, FALSE, 0, FileSystemInterface::EXISTS_RENAME);
     if (isset($file)) {
       if ($file) {
         $form_state->setValue('file_upload', $file);
@@ -229,12 +230,12 @@ class SynonymImportForm extends FormBase {
           '@count synonyms failed import.',
           ['@count' => $count]
         );
-        drupal_set_message($message);
+        $this->messenger()->addStatus($message);
       }
     }
     catch (ImportException $e) {
       $this->logger('search_api_synonym')->error($this->t('Failed to import file due to "%error".', ['%error' => $e->getMessage()]));
-      drupal_set_message($this->t('Failed to import file due to "%error".', ['%error' => $e->getMessage()]));
+      $this->messenger()->addStatus($this->t('Failed to import file due to "%error".', ['%error' => $e->getMessage()]));
     }
   }
 

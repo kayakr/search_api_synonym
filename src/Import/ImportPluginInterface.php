@@ -5,14 +5,15 @@ namespace Drupal\search_api_synonym\Import;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Plugin\ConfigurableInterface;
+use Drupal\Component\Plugin\DependentPluginInterface;
 
 /**
  * Provides an interface for search api synonym import plugins.
  *
  * @ingroup plugin_api
  */
-interface ImportPluginInterface extends PluginFormInterface, ConfigurablePluginInterface {
+interface ImportPluginInterface extends PluginFormInterface, ConfigurableInterface, DependentPluginInterface {
 
   /**
    * Parse the import file.
